@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Temps pour Soi - Nos Bouquets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --noir-satin: #1a1a1a;
+            --rouge: #800020;
+            --blanc: #FFFFFF;
+            --beige: #F5F5DC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--noir-satin);
+            color: var(--blanc);
+            overflow-x: hidden;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Loader amélioré */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--noir-satin);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s, visibility 1s;
+        }
+
+        .loader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            position: relative;
+        }
+
+        .loader-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--blanc);
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .flower-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin: 0 auto 30px;
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: var(--rouge);
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            opacity: 0.8;
+            animation: bloom 2s infinite ease-in-out;
+        }
+
+        @keyframes bloom {
+            0%, 100% { transform: rotate(0deg) scale(0.8); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .petal:nth-child(1) { transform: rotate(0deg); animation-delay: 0s; }
+        .petal:nth-child(2) { transform: rotate(45deg); animation-delay: 0.1s; }
+        .petal:nth-child(3) { transform: rotate(90deg); animation-delay: 0.2s; }
+        .petal:nth-child(4) { transform: rotate(135deg); animation-delay: 0.3s; }
+        .petal:nth-child(5) { transform: rotate(180deg); animation-delay: 0.4s; }
+        .petal:nth-child(6) { transform: rotate(225deg); animation-delay: 0.5s; }
+        .petal:nth-child(7) { transform: rotate(270deg); animation-delay: 0.6s; }
+        .petal:nth-child(8) { transform: rotate(315deg); animation-delay: 0.7s; }
+
+        .loader-text {
+            font-size: 1.3rem;
+            color: var(--blanc);
+            max-width: 300px;
+            margin: 0 auto;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100vw;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(128, 0, 32, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--blanc);
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--blanc);
+            text-decoration: none;
+            position: relative;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rouge);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--blanc);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-btn {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--blanc);
+        }
+
+        /* Header Bouquets */
+        .bouquets-header {
+            height: 60vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            background: linear-gradient(rgba(26, 26, 26, 0.5), rgba(26, 26, 26, 0.7)), 
+                        url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            background-attachment: fixed;
+            padding-top: 80px;
+        }
+
+        .bouquets-header-content {
+            max-width: 800px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bouquets-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: var(--blanc);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bouquets-header p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--blanc);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            padding: 100px 10%;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--blanc);
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--rouge);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--rouge);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .back-btn:hover {
+            color: var(--blanc);
+        }
+
+        .back-btn i {
+            margin-right: 8px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .product-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(128, 0, 32, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(128, 0, 32, 0.4);
+            border-color: var(--rouge);
+        }
+
+        .product-img {
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--blanc);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .product-info p {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .product-btn {
+            background: var(--rouge);
+            color: var(--blanc);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .product-btn:hover {
+            background: var(--blanc);
+            color: var(--rouge);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--noir-satin);
+            padding: 50px 10% 20px;
+            text-align: center;
+            border-top: 1px solid rgba(128, 0, 32, 0.3);
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--blanc);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: var(--blanc);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--rouge);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(26, 26, 26, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: all 0.5s;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .bouquets-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .bouquets-header h1 {
+                font-size: 2rem;
+            }
+
+            .bouquets-header p {
+                font-size: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .loader-logo {
+                font-size: 2rem;
+            }
+
+            .loader-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader amélioré -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">Un Temps pour Soi</div>
+            <div class="flower-loader">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+            </div>
+            <p class="loader-text">Préparons une expérience florale unique pour vous...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">Un Temps pour Soi</a>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#home" class="nav-link">Accueil</a>
+            <a href="index.html#about" class="nav-link">À Propos</a>
+            <a href="index.html#categories" class="nav-link">Nos Créations</a>
+            <a href="index.html#missions" class="nav-link">Nos Missions</a>
+            <a href="index.html#contact" class="nav-link">Contact</a>
+        </div>
+        <div class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Header Bouquets -->
+    <section class="bouquets-header">
+        <div class="bouquets-header-content">
+            <h1 class="animate__animated animate__fadeInDown">Nos Bouquets</h1>
+            <p class="animate__animated animate__fadeIn animate__delay-1s">Des compositions florales émouvantes pour toutes les occasions</p>
+        </div>
+    </section>
+
+    <!-- Contenu principal -->
+    <div class="main-content">
+        <a href="index.html" class="back-btn animate__animated animate__fadeIn"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
+        
+        <h2 class="page-title animate__animated animate__fadeIn">Nos Bouquets Signature</h2>
+        
+        <div class="product-grid">
+            <!-- Bouquet 1 -->
+            <div class="product-card animate__animated animate__fadeInUp">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Destiny">
+                </div>
+                <div class="product-info">
+                    <h3>Destiny</h3>
+                    <p>Bouquet soins du corps confectionné avec passion, tendresse et douceur. Inclut des produits de soin haut de gamme.</p>
+                
+                </div>
+            </div>
+
+            <!-- Bouquet 2 -->
+            <div class="product-card animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Romantique">
+                </div>
+                <div class="product-info">
+                    <h3>Romantique</h3>
+                    <p>Pour déclarer votre amour avec élégance et émotion. Roses rouges et blanches accompagnées d'un parfum exclusif.</p>
+                  
+                </div>
+            </div>
+
+            <!-- Bouquet 3 -->
+            <div class="product-card animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1517825738774-7de9363ef735?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Élégance">
+                </div>
+                <div class="product-info">
+                    <h3>Élégance</h3>
+                    <p>Un bouquet sophistiqué pour les occasions spéciales. Composition florale avec des lys et des orchidées.</p>
+                    
+                </div>
+            </div>
+
+            <!-- Bouquet 4 -->
+            <div class="product-card animate__animated animate__fadeInUp">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Passion">
+                </div>
+                <div class="product-info">
+                    <h3>Passion</h3>
+                    <p>Un bouquet vibrant et coloré pour exprimer vos sentiments les plus forts. Inclut une bougie parfumée.</p>
+                    <a href="index.html#contact" class="product-btn">Commander</a>
+                </div>
+            </div>
+
+            <!-- Bouquet 5 -->
+            <div class="product-card animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Pureté">
+                </div>
+                <div class="product-info">
+                    <h3>Pureté</h3>
+                    <p>Un bouquet blanc immaculé pour les moments de grâce et de sérénité. Fleurs blanches avec des touches de vert.</p>
+                
+                </div>
+            </div>
+
+            <!-- Bouquet 6 -->
+            <div class="product-card animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="product-img">
+                    <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Bouquet Joyeux Anniversaire">
+                </div>
+                <div class="product-info">
+                    <h3>Joyeux Anniversaire</h3>
+                    <p>Un bouquet festif et coloré pour célébrer un anniversaire. Inclut un petit cadeau surprise.</p>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">Un Temps pour Soi</div>
+        <div class="footer-links">
+            <a href="index.html#home">Accueil</a>
+            <a href="index.html#about">À Propos</a>
+            <a href="index.html#categories">Nos Créations</a>
+            <a href="index.html#missions">Nos Missions</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Un Temps pour Soi. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script>
+        // Loader amélioré
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('fade-out');
+            }, 3000);
+        });
+
+        // Menu mobile
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Animation au scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate__animated');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    const animation = element.getAttribute('data-animation');
+                    if (animation) {
+                        element.classList.add(animation);
+                    }
+                }
+            });
+        };
+
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
+</body>
+</html>
