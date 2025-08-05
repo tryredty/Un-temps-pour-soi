@@ -6,31 +6,117 @@
     <title>Un Temps pour Soi - Bouquets Emotionnels</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --noir: #000000;
+            --noir-satin: #1a1a1a;
             --rouge: #800020;
-            --or: #C5B358;
-            --blanc: #F8F4E6;
+            --blanc: #FFFFFF;
+            --beige: #F5F5DC;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         body {
-            background-color: var(--noir);
+            background-color: var(--noir-satin);
             color: var(--blanc);
             overflow-x: hidden;
             line-height: 1.8;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Effets de pétales */
-        .petals {
+        /* Loader amélioré */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--noir-satin);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s, visibility 1s;
+        }
+
+        .loader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            position: relative;
+        }
+
+        .loader-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--blanc);
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .flower-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin: 0 auto 30px;
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: var(--rouge);
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            opacity: 0.8;
+            animation: bloom 2s infinite ease-in-out;
+        }
+
+        @keyframes bloom {
+            0%, 100% { transform: rotate(0deg) scale(0.8); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .petal:nth-child(1) { transform: rotate(0deg); animation-delay: 0s; }
+        .petal:nth-child(2) { transform: rotate(45deg); animation-delay: 0.1s; }
+        .petal:nth-child(3) { transform: rotate(90deg); animation-delay: 0.2s; }
+        .petal:nth-child(4) { transform: rotate(135deg); animation-delay: 0.3s; }
+        .petal:nth-child(5) { transform: rotate(180deg); animation-delay: 0.4s; }
+        .petal:nth-child(6) { transform: rotate(225deg); animation-delay: 0.5s; }
+        .petal:nth-child(7) { transform: rotate(270deg); animation-delay: 0.6s; }
+        .petal:nth-child(8) { transform: rotate(315deg); animation-delay: 0.7s; }
+
+        .loader-text {
+            font-size: 1.3rem;
+            color: var(--blanc);
+            max-width: 300px;
+            margin: 0 auto;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Effets de pétales flottants */
+        .floating-petals {
             position: fixed;
             top: 0;
             left: 0;
@@ -40,15 +126,15 @@
             z-index: -1;
         }
 
-        .petal {
+        .floating-petal {
             position: absolute;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23800020"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>');
             background-size: cover;
             opacity: 0.6;
-            animation: fall linear infinite;
+            animation: float linear infinite;
         }
 
-        @keyframes fall {
+        @keyframes float {
             to {
                 transform: translateY(100vh) rotate(360deg);
             }
@@ -57,22 +143,24 @@
         /* Navigation */
         nav {
             position: fixed;
-            width: 100%;
+            width: 100vw;
             padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(128, 0, 32, 0.3);
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--or);
+            color: var(--blanc);
             text-decoration: none;
             letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
         }
 
         .nav-links {
@@ -86,6 +174,7 @@
             position: relative;
             font-size: 1.1rem;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .nav-links a::after {
@@ -100,7 +189,7 @@
         }
 
         .nav-links a:hover {
-            color: var(--or);
+            color: var(--blanc);
         }
 
         .nav-links a:hover::after {
@@ -114,12 +203,13 @@
             color: var(--blanc);
         }
 
-        /* Hero Section */
+        /* Hero Section - Cadrage amélioré */
         .hero {
             height: 100vh;
+            width: 100%;
             display: flex;
             align-items: center;
-            padding: 0 10%;
+            justify-content: center;
             position: relative;
             overflow: hidden;
             text-align: center;
@@ -132,25 +222,43 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(128, 0, 32, 0.1) 0%, rgba(0, 0, 0, 1) 70%);
-            z-index: -1;
+            background: linear-gradient(rgba(26, 26, 26, 0.3), rgba(26, 26, 26, 0.7));
+            z-index: 1;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%; /* Ajustez ce pourcentage pour cadrer l'image */
         }
 
         .hero-content {
             max-width: 800px;
-            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 20px;
             line-height: 1.2;
-            text-shadow: 0 0 10px rgba(128, 0, 32, 0.5);
+            color: var(--blanc);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Playfair Display', serif;
         }
 
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
+            color: var(--blanc);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-btn {
@@ -163,25 +271,16 @@
             font-weight: 600;
             letter-spacing: 1px;
             transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(128, 0, 32, 0.7);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(128, 0, 32, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 15px rgba(128, 0, 32, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(128, 0, 32, 0);
-            }
+            border: 2px solid var(--rouge);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin: 0 auto;
         }
 
         .cta-btn:hover {
-            background: var(--or);
-            color: var(--noir);
+            background: transparent;
+            color: var(--blanc);
+            border-color: var(--blanc);
             transform: translateY(-3px);
         }
 
@@ -195,8 +294,9 @@
             font-size: 2.5rem;
             margin-bottom: 50px;
             text-align: center;
-            color: var(--or);
+            color: var(--blanc);
             position: relative;
+            font-family: 'Playfair Display', serif;
         }
 
         .section-title::after {
@@ -210,7 +310,7 @@
             background: var(--rouge);
         }
 
-        /* À Propos */
+        /* À Propos - Cadrage image amélioré */
         .about {
             display: flex;
             align-items: center;
@@ -223,25 +323,15 @@
             min-height: 500px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(128, 0, 32, 0.3);
-        }
-
-        .about-img::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--rouge), transparent);
-            opacity: 0.3;
-            z-index: 1;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            background-color: var(--noir-satin);
         }
 
         .about-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center 30%; /* Ajustez ce pourcentage pour cadrer l'image */
             transition: transform 0.5s;
         }
 
@@ -256,7 +346,8 @@
         .about-content h3 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: var(--or);
+            color: var(--blanc);
+            font-family: 'Playfair Display', serif;
         }
 
         .verse {
@@ -265,100 +356,102 @@
             padding: 20px;
             border-left: 3px solid var(--rouge);
             background: rgba(128, 0, 32, 0.1);
+            font-family: 'Playfair Display', serif;
         }
 
-        /* Produits */
-        .products {
-            background: url('https://images.unsplash.com/photo-1535254973040-607b474cb50d?q=80&w=1000') no-repeat center/cover;
-            position: relative;
+        /* Catégories - Cadrage images amélioré */
+        .categories {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 80px 10%;
         }
 
-        .products::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .products-container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .product-grid {
+        .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
+            margin-top: 50px;
         }
 
-        .product-card {
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(128, 0, 32, 0.3);
-            border-radius: 10px;
+        .category-card {
+            position: relative;
+            height: 400px;
             overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
             cursor: pointer;
+            transition: all 0.5s;
+            background-color: var(--noir-satin);
+            border: 1px solid rgba(128, 0, 32, 0.3);
         }
 
-        .product-card:hover {
+        .category-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(128, 0, 32, 0.4);
             border-color: var(--rouge);
         }
 
-        .product-img {
-            height: 350px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .product-img img {
+        .category-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
+            object-position: center; /* Centre l'image */
             transition: transform 0.5s;
         }
 
-        /* Ajustements spécifiques pour chaque image */
-        .product-img.img-destiny img {
-            object-position: top center;
-        }
-
-        .product-img.img-filles img {
-            object-position: 25% 75%;
-        }
-
-        .product-img.img-romantique img {
-            object-position: center 30%;
-        }
-
-        .product-card:hover .product-img img {
+        .category-card:hover .category-img {
             transform: scale(1.1);
         }
 
-        .product-info {
-            padding: 25px;
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
             text-align: center;
+            align-items: center;
         }
 
-        .product-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--or);
+        .category-title {
+            font-size: 2rem;
+            color: var(--blanc);
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
         }
 
-        .product-info p {
-            font-size: 1rem;
+        .category-btn {
+            background: var(--rouge);
+            color: var(--blanc);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            width: fit-content;
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .category-btn:hover {
+            background: var(--blanc);
+            color: var(--rouge);
         }
 
         /* Missions */
         .missions {
             text-align: center;
+            background: var(--noir-satin);
         }
 
         .mission-cards {
@@ -384,25 +477,37 @@
             transform: translateY(-10px);
             background: rgba(128, 0, 32, 0.2);
             box-shadow: 0 10px 30px rgba(128, 0, 32, 0.3);
-            border-color: var(--or);
+            border-color: var(--rouge);
         }
 
         .mission-icon {
             font-size: 3rem;
             margin-bottom: 20px;
-            color: var(--or);
+            color: var(--rouge);
         }
 
         .mission-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
-            color: var(--or);
+            color: var(--blanc);
+            font-family: 'Playfair Display', serif;
         }
 
-        /* Contact */
+        /* Contact - Cadrage image amélioré */
         .contact {
-            background: url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?q=80&w=1000') no-repeat center/cover;
             position: relative;
+            overflow: hidden;
+        }
+
+        .contact-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: -1;
         }
 
         .contact::before {
@@ -412,7 +517,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(26, 26, 26, 0.7);
+            z-index: 0;
         }
 
         .contact-container {
@@ -429,7 +535,8 @@
         .contact-info h3 {
             font-size: 2rem;
             margin-bottom: 30px;
-            color: var(--or);
+            color: var(--blanc);
+            font-family: 'Playfair Display', serif;
         }
 
         .contact-details {
@@ -473,7 +580,7 @@
 
         .contact-form {
             flex: 1;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(26, 26, 26, 0.8);
             padding: 30px;
             border-radius: 10px;
             border: 1px solid rgba(128, 0, 32, 0.3);
@@ -486,7 +593,7 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: var(--or);
+            color: var(--blanc);
         }
 
         .form-control {
@@ -501,7 +608,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--or);
+            border-color: var(--rouge);
             background: rgba(255, 255, 255, 0.2);
         }
 
@@ -521,26 +628,29 @@
             letter-spacing: 1px;
             transition: all 0.3s;
             width: 100%;
+            text-transform: uppercase;
         }
 
         .submit-btn:hover {
-            background: var(--or);
-            color: var(--noir);
+            background: var(--blanc);
+            color: var(--rouge);
         }
 
         /* Footer */
         footer {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--noir-satin);
             padding: 50px 10% 20px;
             text-align: center;
+            border-top: 1px solid rgba(128, 0, 32, 0.3);
         }
 
         .footer-logo {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--or);
+            color: var(--blanc);
             margin-bottom: 20px;
             letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
         }
 
         .footer-links {
@@ -555,10 +665,11 @@
             color: var(--blanc);
             text-decoration: none;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .footer-links a:hover {
-            color: var(--or);
+            color: var(--rouge);
         }
 
         .copyright {
@@ -581,6 +692,10 @@
             .contact-container {
                 flex-direction: column;
             }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -590,7 +705,7 @@
                 left: -100%;
                 width: 100%;
                 height: calc(100vh - 80px);
-                background: rgba(0, 0, 0, 0.9);
+                background: rgba(26, 26, 26, 0.95);
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
@@ -613,6 +728,14 @@
             .section-title {
                 font-size: 2rem;
             }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .loader-logo {
+                font-size: 2.5rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -631,40 +754,68 @@
             .mission-card {
                 min-width: 100%;
             }
+
+            .loader-logo {
+                font-size: 2rem;
+            }
+
+            .loader-text {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Effets de pétales -->
-    <div class="petals" id="petals"></div>
+    <!-- Loader amélioré -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">Un Temps pour Soi</div>
+            <div class="flower-loader">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+            </div>
+            <p class="loader-text">Préparons une expérience florale unique pour vous...</p>
+        </div>
+    </div>
+
+    <!-- Effets de pétales flottants -->
+    <div class="floating-petals" id="floatingPetals"></div>
 
     <!-- Navigation -->
     <nav>
-        <a href="#" class="logo">Un Temps pour Soi</a>
+        <a href="index.html" class="logo">Un Temps pour Soi</a>
         <div class="nav-links" id="navLinks">
-            <a href="#home">Accueil</a>
-            <a href="#about">À Propos</a>
-            <a href="#products">Nos Créations</a>
-            <a href="#missions">Nos Missions</a>
-            <a href="#contact">Contact</a>
+            <a href="#home" class="nav-link">Accueil</a>
+            <a href="#about" class="nav-link">À Propos</a>
+            <a href="#categories" class="nav-link">Nos Créations</a>
+            <a href="#missions" class="nav-link">Nos Missions</a>
+            <a href="#contact" class="nav-link">Contact</a>
         </div>
         <div class="menu-btn" id="menuBtn">
             <i class="fas fa-bars"></i>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - Cadrage amélioré -->
     <section class="hero" id="home">
+        <!-- Image de fond avec cadrage précis -->
+        <img src="couv1.jpg" alt="Bouquet floral" class="hero-bg">
         <div class="hero-content">
             <h1 class="animate__animated animate__fadeInDown">Des bouquets qui parlent au cœur</h1>
             <p class="animate__animated animate__fadeIn animate__delay-1s">Chaque composition florale est pensée pour toucher le cœur. Un véritable rituel d'amour, d'émotions et de douceur.</p>
-            <a href="#products" class="cta-btn animate__animated animate__fadeInUp animate__delay-2s">Découvrez nos créations</a>
+            <a href="#categories" class="cta-btn animate__animated animate__fadeInUp animate__delay-2s">Découvrez nos créations</a>
         </div>
     </section>
 
     <!-- À Propos -->
     <section class="about-section" id="about">
-        <h2 class="section-title animate__animated animate__fadeIn">À Propos</h2>
+        <h2 class="section-title animate__animated animate__fadeIn">Nos Pensées</h2>
         <div class="about">
             <div class="about-img animate__animated animate__fadeInLeft">
                 <img src="propos.jpg" alt="Fondatrice">
@@ -682,42 +833,37 @@
         </div>
     </section>
 
-    <!-- Produits -->
-    <section class="products" id="products">
-        <div class="products-container">
-            <h2 class="section-title animate__animated animate__fadeIn">Nos Créations</h2>
-            <div class="product-grid">
-                <!-- Produit 1 - Cadrage ajusté -->
-                <div class="product-card animate__animated animate__fadeInUp">
-                    <div class="product-img img-destiny">
-                        <img src="photo1.jpg" alt="Bouquet Destiny">
-                    </div>
-                    <div class="product-info">
-                        <h3>Destiny</h3>
-                        <p>Bouquet soins du corps confectionné avec passion, tendresse et douceur.</p>
-                    </div>
+    <!-- Catégories -->
+    <section class="categories" id="categories">
+        <h2 class="section-title animate__animated animate__fadeIn">Nos Créations</h2>
+        <div class="category-grid">
+            <!-- Mariage -->
+            <div class="category-card animate__animated animate__fadeInUp">
+                <img src="mariage.jpg" alt="Mariage" class="category-img">
+                <div class="category-overlay">
+                    <h3 class="category-title">Mariage</h3>
+                    <p>Des créations uniques pour votre jour le plus spécial</p>
+                    <a href="mariage.html" class="category-btn">Voir les prestations</a>
                 </div>
+            </div>
 
-                <!-- Produit 2 - Cadrage ajusté -->
-                <div class="product-card animate__animated animate__fadeInUp animate__delay-1s">
-                    <div class="product-img img-filles">
-                        <img src="photo3.jpg" alt="Box Filles d'Honneur">
-                    </div>
-                    <div class="product-info">
-                        <h3>Box Filles d'Honneur</h3>
-                        <p>Une sélection de produits premium pour un moment de détente et de beauté.</p>
-                    </div>
+            <!-- Bouquets -->
+            <div class="category-card animate__animated animate__fadeInUp animate__delay-1s">
+                <img src="photo2.jpg" alt="Bouquets" class="category-img">
+                <div class="category-overlay">
+                    <h3 class="category-title">Bouquets</h3>
+                    <p>Des compositions florales émouvantes</p>
+                    <a href="bouquets.html" class="category-btn">Découvrir</a>
                 </div>
+            </div>
 
-                <!-- Produit 3 - Cadrage ajusté -->
-                <div class="product-card animate__animated animate__fadeInUp animate__delay-2s">
-                    <div class="product-img img-romantique">
-                        <img src="photo2.jpg" alt="Bouquet Romantique">
-                    </div>
-                    <div class="product-info">
-                        <h3>Bouquet Souvenir Romantique</h3>
-                        <p>Pour déclarer votre amour avec élégance et émotion.</p>
-                    </div>
+            <!-- Autres -->
+            <div class="category-card animate__animated animate__fadeInUp animate__delay-2s">
+                <img src="photo3.jpg" alt="Autres créations" class="category-img">
+                <div class="category-overlay">
+                    <h3 class="category-title">Autres</h3>
+                    <p>Nos autres prestations et créations</p>
+                    <a href="autres.html" class="category-btn">Explorer</a>
                 </div>
             </div>
         </div>
@@ -758,8 +904,10 @@
 
     <!-- Contact -->
     <section class="contact" id="contact">
+        <!-- Image de fond avec cadrage précis -->
+        <img src="end.jpg" alt="Fond floral contact" class="contact-bg">
+        <h2 class="section-title animate__animated animate__fadeIn">Contact</h2>
         <div class="contact-container">
-            <h2 class="section-title animate__animated animate__fadeIn">Contact</h2>
             <div class="contact-info animate__animated animate__fadeInLeft">
                 <h3>Prenez contact avec nous</h3>
                 <div class="contact-details">
@@ -814,7 +962,7 @@
         <div class="footer-links">
             <a href="#home">Accueil</a>
             <a href="#about">À Propos</a>
-            <a href="#products">Nos Créations</a>
+            <a href="#categories">Nos Créations</a>
             <a href="#missions">Nos Missions</a>
             <a href="#contact">Contact</a>
         </div>
@@ -824,28 +972,32 @@
     </footer>
 
     <script>
-        // Effets de pétales
-        const petalsContainer = document.getElementById('petals');
-        const petalCount = 15;
+        // Loader amélioré
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('fade-out');
+            }, 3000);
+        });
 
-        for (let i = 0; i < petalCount; i++) {
+        // Effets de pétales flottants
+        const floatingPetals = document.getElementById('floatingPetals');
+        const floatingPetalCount = 15;
+
+        for (let i = 0; i < floatingPetalCount; i++) {
             const petal = document.createElement('div');
-            petal.classList.add('petal');
+            petal.classList.add('floating-petal');
             
-            // Position aléatoire
             petal.style.left = Math.random() * 100 + 'vw';
             petal.style.top = -Math.random() * 100 + 'px';
             
-            // Taille aléatoire
             const size = Math.random() * 15 + 10;
             petal.style.width = size + 'px';
             petal.style.height = size + 'px';
             
-            // Animation aléatoire
             const duration = Math.random() * 10 + 10;
             petal.style.animationDuration = duration + 's';
             
-            petalsContainer.appendChild(petal);
+            floatingPetals.appendChild(petal);
         }
 
         // Menu mobile
@@ -866,14 +1018,6 @@
             });
         });
 
-        // Redirection vers contact au clic sur les produits
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', () => {
-                window.location.href = '#contact';
-            });
-            card.style.cursor = 'pointer';
-        });
-
         // Animation au scroll
         const animateOnScroll = () => {
             const elements = document.querySelectorAll('.animate__animated');
@@ -884,7 +1028,9 @@
                 
                 if (elementPosition < screenPosition) {
                     const animation = element.getAttribute('data-animation');
-                    element.classList.add(animation);
+                    if (animation) {
+                        element.classList.add(animation);
+                    }
                 }
             });
         };
